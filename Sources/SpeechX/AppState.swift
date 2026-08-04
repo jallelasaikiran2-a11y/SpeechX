@@ -20,6 +20,9 @@ private enum DefaultsKey: String {
     case selectedAudioDeviceUID  = "selected_audio_device_uid"
     case customSystemPrompt      = "custom_system_prompt"
     case focusWords              = "focus_words"
+    case totalWordsDictated      = "total_words_dictated"
+    case currentStreakDays       = "current_streak_days"
+    case averageWPM              = "average_wpm"
 }
 
 private extension UserDefaults {
@@ -104,9 +107,14 @@ class AppState: ObservableObject {
     private let transcriptHistoryLimit = 20
 
     func recordTranscript(raw: String, processed: String?) {
+        let entry = TranscriptEntry(timestamp: Date(), raw: raw, processed: processed)
+        
+        // Update stats
+        let words = entry.typed.split(separator: " ").count
+        totalWordsDictated += words
+        
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            let entry = TranscriptEntry(timestamp: Date(), raw: raw, processed: processed)
             self.transcriptHistory.insert(entry, at: 0)
             if self.transcriptHistory.count > self.transcriptHistoryLimit {
                 self.transcriptHistory.removeLast(self.transcriptHistory.count - self.transcriptHistoryLimit)
@@ -211,6 +219,18 @@ class AppState: ObservableObject {
         didSet { UserDefaults.standard.set(focusWords, forKey: .focusWords) }
     }
 
+    @Published var totalWordsDictated: Int = 0 {
+        didSet { UserDefaults.standard.set(totalWordsDictated, forKey: .totalWordsDictated) }
+    }
+    
+    @Published var currentStreakDays: Int = 0 {
+        didSet { UserDefaults.standard.set(currentStreakDays, forKey: .currentStreakDays) }
+    }
+    
+    @Published var averageWPM: Int = 0 {
+        didSet { UserDefaults.standard.set(averageWPM, forKey: .averageWPM) }
+    }
+
     /// Parsed, de-duplicated focus-word trigger keys. Drives the Deepgram keyterm query.
     var focusWordTerms: [String] { FocusWordsDictionary.keys(focusWords) }
 
@@ -289,6 +309,11 @@ class AppState: ObservableObject {
         self.favoriteFocusWords = Set(
             UserDefaults.standard.stringArray(forKey: DefaultsKey.favoriteFocusWords.rawValue) ?? []
         )
+        
+        self.totalWordsDictated = UserDefaults.standard.integer(forKey: DefaultsKey.totalWordsDictated.rawValue)
+        self.currentStreakDays = UserDefaults.standard.integer(forKey: DefaultsKey.currentStreakDays.rawValue)
+        self.averageWPM = UserDefaults.standard.integer(forKey: DefaultsKey.averageWPM.rawValue)
+
         self.selectedAudioDeviceUID = UserDefaults.standard.string(forKey: .selectedAudioDeviceUID) ?? ""
 
         self.deepgramService.onPartialTranscript = { [weak self] text in

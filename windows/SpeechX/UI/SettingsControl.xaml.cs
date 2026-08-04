@@ -18,7 +18,7 @@ namespace SpeechX.UI;
 /// the custom-prompt field are data-bound to AppState; combos, key fields, the async model
 /// fetches, and the Dictionary entry list are driven imperatively from here.
 /// </summary>
-public partial class SettingsWindow : Window
+public partial class SettingsControl : System.Windows.Controls.UserControl
 {
     private readonly AppState _appState;
     private readonly UpdaterManager _updater;
@@ -60,25 +60,27 @@ public partial class SettingsWindow : Window
         "Tamil", "Telugu", "Kannada", "Marathi", "Punjabi", "Russian", "Chinese (Simplified)", "Italian", "Dutch", "Swahili",
     };
 
-    public SettingsWindow(AppState appState, UpdaterManager updater)
+        public event EventHandler? RequestGoHome;
+
+    private void OnBackToHomeClick(object sender, RoutedEventArgs e)
+    {
+        RequestGoHome?.Invoke(this, EventArgs.Empty);
+    }
+
+    public SettingsControl(AppState appState, UpdaterManager updater)
     {
         InitializeComponent();
-        Icon = IconFactory.AppImage(); // match the tray / taskbar mic icon
-        _appState = appState;
+                _appState = appState;
         _updater = updater;
         DataContext = appState;
         _appState.PropertyChanged += OnAppStateChanged;
         _updater.StatusChanged += OnUpdaterStatus;
         _updater.BusyChanged += OnUpdaterBusy;
         Loaded += OnLoaded;
-        Closed += OnSettingsClosed;
+        Unloaded += OnSettingsClosed;
     }
 
-    protected override void OnSourceInitialized(EventArgs e)
-    {
-        base.OnSourceInitialized(e);
-        ThemeHelper.UseDarkTitleBar(this);
-    }
+    
 
     private void SetStatus(System.Windows.Controls.TextBlock target, string text, bool? ok)
     {
@@ -773,3 +775,5 @@ public partial class SettingsWindow : Window
         e.Handled = true;
     }
 }
+
+

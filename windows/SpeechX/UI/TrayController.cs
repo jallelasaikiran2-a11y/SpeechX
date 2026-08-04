@@ -25,7 +25,7 @@ public sealed class TrayController : IDisposable
     private readonly WinForms.ToolStripSeparator _historySeparator;
 
     private OverlayWindow? _overlay;
-    private SettingsWindow? _settingsWindow;
+    private MainWindow? _mainWindow;
 
     public TrayController(AppState appState, UpdaterManager updater)
     {
@@ -193,18 +193,18 @@ public sealed class TrayController : IDisposable
 
     public void ShowSettings()
     {
-        if (_settingsWindow == null)
+        if (_mainWindow == null)
         {
-            _settingsWindow = new SettingsWindow(_appState, _updater);
-            _settingsWindow.Closed += (_, _) => _settingsWindow = null;
-            _settingsWindow.Show();
+            _mainWindow = new MainWindow(_appState, _updater);
+            _mainWindow.Closed += (_, _) => _mainWindow = null;
+            _mainWindow.Show();
         }
         else
         {
-            _settingsWindow.Activate();
+            _mainWindow.Activate();
         }
-        _settingsWindow.WindowState = WindowState.Normal;
-        _settingsWindow.Activate();
+        _mainWindow.WindowState = WindowState.Normal;
+        _mainWindow.Activate();
     }
 
     private static void OpenUrl(string url)
@@ -219,3 +219,4 @@ public sealed class TrayController : IDisposable
         _menu.Dispose();
     }
 }
+

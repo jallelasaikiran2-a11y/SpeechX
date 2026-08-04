@@ -159,6 +159,23 @@ public sealed class AppState : INotifyPropertyChanged
 
     private List<TranscriptEntry> _transcriptHistory = new();
     public IReadOnlyList<TranscriptEntry> TranscriptHistory => _transcriptHistory;
+        public int TotalWordsDictated
+        {
+            get => int.TryParse(Settings.GetString("TotalWordsDictated"), out var v) ? v : 0;
+            set { Settings.SetString("TotalWordsDictated", value.ToString()); OnPropertyChanged(); }
+        }
+        
+        public int CurrentStreakDays
+        {
+            get => int.TryParse(Settings.GetString("CurrentStreakDays"), out var v) ? v : 0;
+            set { Settings.SetString("CurrentStreakDays", value.ToString()); OnPropertyChanged(); }
+        }
+        
+        public int AverageWPM
+        {
+            get => int.TryParse(Settings.GetString("AverageWPM"), out var v) ? v : 0;
+            set { Settings.SetString("AverageWPM", value.ToString()); OnPropertyChanged(); }
+        }
 
     public void RecordTranscript(string raw, string? processed)
     {
@@ -401,3 +418,5 @@ public sealed class AppState : INotifyPropertyChanged
         else disp.BeginInvoke(action);
     }
 }
+
+

@@ -267,10 +267,10 @@ class MenuBarController {
 
     @objc private func openSettings() {
         if settingsWindow == nil {
-            let contentView = SettingsView(appState: appState, updater: updater)
+            let contentView = MainRouterView(appState: appState, updater: updater)
             let window = NSWindow(
-                contentRect: NSRect(x: 0, y: 0, width: 760, height: 580),
-                styleMask: [.titled, .closable, .fullSizeContentView],
+                contentRect: NSRect(x: 0, y: 0, width: 1000, height: 700),
+                styleMask: [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView],
                 backing: .buffered,
                 defer: false
             )
