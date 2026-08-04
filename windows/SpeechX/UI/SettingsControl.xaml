@@ -2,7 +2,6 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="clr-namespace:SpeechX.UI"
-        Width="760" Height="580"
         Background="{StaticResource WindowBgBrush}"
         FontFamily="{StaticResource AppFont}"
 >
@@ -25,6 +24,8 @@
             <ColumnDefinition Width="208" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+
+        <Button x:Name="BackBtn" Content="&lt; Back to Home" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Padding="8,4" Background="#F7F6F3" BorderBrush="#141414" BorderThickness="1" Click="OnBackToHomeClick" Panel.ZIndex="10" Grid.Column="1" />
 
         <!-- ======================= Sidebar ======================= -->
         <Border Grid.Column="0" Background="{StaticResource SidebarBgBrush}"

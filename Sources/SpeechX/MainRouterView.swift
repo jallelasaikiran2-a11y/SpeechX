@@ -25,6 +25,49 @@ struct MainRouterView: View {
 }
 
 struct HomeView: View {
+    private func getGreeting() -> String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        let name = NSFullUserName()
+        var options: [String] = []
+        
+        switch hour {
+        case 5..<12:
+            options = [
+                "Morning, \(name). Ready when you are.",
+                "Good morning — let's turn your thoughts into words.",
+                "Morning. Let's get to it."
+            ]
+        case 12..<17:
+            options = [
+                "Back again, \(name)? Let's keep talking.",
+                "Afternoon — say what's on your mind.",
+                "Good afternoon. Ready to dictate?"
+            ]
+        case 17..<22:
+            options = [
+                "Evening, \(name). Still have things to say?",
+                "Good evening. Let's get your words down.",
+                "Evening. Keep the ideas flowing."
+            ]
+        default:
+            options = [
+                "Up late? Your voice is faster than your fingers right now.",
+                "Late night, \(name)? Speak your mind.",
+                "Still working? Let's talk it out."
+            ]
+        }
+        
+        let neutralOptions = [
+            "Hey \(name), speak your mind.",
+            "\(name), let's get your words down.",
+            "Talk it out, \(name).",
+            "Ready to dictate?",
+            "Your voice is your best tool."
+        ]
+        
+        options.append(contentsOf: neutralOptions)
+        return options.randomElement() ?? "Welcome back, \(name)"
+    }
     @ObservedObject var appState: AppState
     @Binding var currentRoute: AppRoute
 
@@ -32,7 +75,7 @@ struct HomeView: View {
         VStack(spacing: 0) {
             // Header
             HStack {
-                Text("Welcome back, \(NSFullUserName())")
+                Text(getGreeting())
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(.vlTextPrimary)
                 Spacer()
@@ -202,3 +245,4 @@ struct SettingsPanelView: View {
         }
     }
 }
+

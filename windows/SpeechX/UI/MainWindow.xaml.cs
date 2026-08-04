@@ -35,6 +35,11 @@ namespace SpeechX.UI
                 DragMove();
         }
         
+                private void OnMaximizeClick(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        }
+        
         private void OnMinimizeClick(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
@@ -46,4 +51,6 @@ namespace SpeechX.UI
         }
     }
 }
+
+
 
