@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-VocalFlow is a macOS menu-bar voice-dictation app: hold a global hotkey → speak → the
+SpeechX is a macOS menu-bar voice-dictation app: hold a global hotkey → speak → the
 transcript is streamed from Deepgram, optionally polished by an LLM (Groq/OpenRouter), and
 injected at the cursor via a simulated Cmd+V. It's a **Swift Package Manager executable**
 (not an Xcode project), assembled by hand into a `.app` bundle. Users bring their own API
@@ -20,7 +20,7 @@ it — only the design/spec:
 ```bash
 # Dev loop (build .app bundle, ad-hoc sign, embed Sparkle, reset Accessibility)
 ./build.sh
-./run.sh                      # kills any running instance and relaunches VocalFlow.app
+./run.sh                      # kills any running instance and relaunches SpeechX.app
 
 # Raw compile / test
 swift build -c release
@@ -28,15 +28,15 @@ swift test                                    # all tests
 swift test --filter FocusWordsDictionaryTests # one test class (SwiftPM --filter takes a regex)
 
 # Signed + notarized + stapled distributable .pkg + Sparkle appcast (release only)
-./scripts/make-pkg.sh         # → dist/VocalFlow.pkg ; needs team signing certs on the Mac
+./scripts/make-pkg.sh         # → dist/SpeechX.pkg ; needs team signing certs on the Mac
 SKIP_NOTARIZE=1 ./scripts/make-pkg.sh         # local signed-but-not-notarized build
 ```
 
 **After every rebuild you must re-grant Accessibility permission** (System Settings →
 Privacy & Security → Accessibility): `build.sh` runs `tccutil reset Accessibility
-com.vocalflow.app`, so the old grant is invalidated. Without it the hotkey and text
+com.speechx.app`, so the old grant is invalidated. Without it the hotkey and text
 injection silently do nothing. Debug logs stream via
-`log stream --predicate 'subsystem == "com.vocalflow.app"' --level debug`.
+`log stream --predicate 'subsystem == "com.speechx.app"' --level debug`.
 
 ## Architecture
 
@@ -59,7 +59,7 @@ pasteboard, posts synthetic Cmd+V, then restores the old clipboard).
 - `AppState` — the single `ObservableObject` shared everywhere; owns recording state,
   transcript history, and all settings (backed by `UserDefaults`, keys centralized in the
   private `DefaultsKey` enum). Note settings survive reinstalls — reset via
-  `defaults delete com.vocalflow.app`.
+  `defaults delete com.speechx.app`.
 - `KeychainService` — API keys (never on disk in plaintext).
 - `MenuBarController` — the `NSStatusItem` menu, recent-transcripts submenu, error surfacing,
   and hosts `SettingsView` (SwiftUI) + `RecordingOverlayController` (waveform overlay).
@@ -83,7 +83,7 @@ auto-learns the corrected spelling. `TypeOverDetector` (in `TypeOverWatcher.swif
 hard-coded `commonWords` list.
 
 **Auto-update** — `UpdaterManager` wraps Sparkle. The appcast feed and update `.zip` are
-self-hosted at `https://www.vocallabs.ai/releases/vocalflow/`; `Info.plist`'s `SUFeedURL`
+self-hosted at `https://www.vocallabs.ai/releases/speechx/`; `Info.plist`'s `SUFeedURL`
 must match. `make-pkg.sh` regenerates and EdDSA-signs the appcast as part of a release.
 
 ## Non-obvious constraints
@@ -103,7 +103,7 @@ must match. `make-pkg.sh` regenerates and EdDSA-signs the appcast as part of a r
 
 `DeepgramService`, `LLMService`, `FocusWordsDictionary`, and `APIError` are written to be
 platform-agnostic (URLSession + AVFoundation, no AppKit) and are **reused verbatim** by the
-iOS spike. Everything else in `Sources/VocalFlow/` is macOS-only (global hotkey, Cmd+V
+iOS spike. Everything else in `Sources/SpeechX/` is macOS-only (global hotkey, Cmd+V
 injection, Accessibility type-over, menu bar, Sparkle, system-audio mute) and has no iOS/
 Windows equivalent.
 

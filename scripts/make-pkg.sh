@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
 # make-pkg.sh — build, sign, notarize & staple a distributable macOS .pkg
-# for VocalFlow (Swift Package Manager app, direct distribution / not App Store).
+# for SpeechX (Swift Package Manager app, direct distribution / not App Store).
 #
 # One command, re-runnable for any future build:
 #     ./scripts/make-pkg.sh
 #
-# Produces: dist/VocalFlow.pkg  (signed + notarized + stapled, universal binary)
+# Produces: dist/SpeechX.pkg  (signed + notarized + stapled, universal binary)
 #
 # Reusable team signing assets (already set up on this Mac):
 #   - Developer ID Application + Installer certs in the login keychain
@@ -20,21 +20,21 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 # Config (override via env)
 # ---------------------------------------------------------------------------
-APP_NAME="${APP_NAME:-VocalFlow}"
-BUNDLE_ID="${BUNDLE_ID:-com.vocalflow.app}"
-PKG_ID="${PKG_ID:-com.vocalflow.installer}"
+APP_NAME="${APP_NAME:-SpeechX}"
+BUNDLE_ID="${BUNDLE_ID:-com.speechx.app}"
+PKG_ID="${PKG_ID:-com.speechx.installer}"
 
 APP_CERT="${APP_CERT:-Developer ID Application: Nilesh Kumar (R65MP66K97)}"
 INSTALLER_CERT="${INSTALLER_CERT:-Developer ID Installer: Nilesh Kumar (R65MP66K97)}"
 NOTARYTOOL_PROFILE="${NOTARYTOOL_PROFILE:-AC_PROFILE_DIALER}"
 
-ENTITLEMENTS="${ENTITLEMENTS:-Resources/VocalFlow.entitlements}"
+ENTITLEMENTS="${ENTITLEMENTS:-Resources/SpeechX.entitlements}"
 DEPLOY_TARGET="${DEPLOY_TARGET:-13.0}"      # must match Package.swift platforms / LSMinimumSystemVersion
 
 # Sparkle auto-update. The appcast feed and the update .zip are both self-hosted
-# on the website under /releases/vocalflow/ (matching the Vocallabs Dialer
+# on the website under /releases/speechx/ (matching the Vocallabs Dialer
 # convention). RELEASE_BASE must match Info.plist SUFeedURL's directory.
-RELEASE_BASE="${RELEASE_BASE:-https://www.vocallabs.ai/releases/vocalflow}"
+RELEASE_BASE="${RELEASE_BASE:-https://www.vocallabs.ai/releases/speechx}"
 SU_FEED_URL="${SU_FEED_URL:-${RELEASE_BASE}/appcast.xml}"
 
 SKIP_NOTARIZE="${SKIP_NOTARIZE:-0}"          # set to 1 for a local signed-but-not-notarized build
@@ -145,7 +145,7 @@ codesign -dv --verbose=2 "${APP_BUNDLE}" 2>&1 | grep -E "Authority|TeamIdentifie
 # ---------------------------------------------------------------------------
 # 4. pkgbuild — component pkg installing to /Applications.
 #    Relocation is disabled via the component plist so macOS can't "helpfully"
-#    install over an existing copy of com.vocalflow.app found elsewhere on disk.
+#    install over an existing copy of com.speechx.app found elsewhere on disk.
 # ---------------------------------------------------------------------------
 echo "==> Building component pkg..."
 rm -rf "${STAGING_DIR}" "${SCRIPTS_DIR}" "${COMPONENT_PLIST}" "${COMPONENT_PKG}"
@@ -271,9 +271,9 @@ if [[ "${SKIP_NOTARIZE}" != "1" && "${SKIP_SPARKLE}" != "1" ]]; then
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
-    <title>VocalFlow</title>
+    <title>SpeechX</title>
     <link>${SU_FEED_URL}</link>
-    <description>Most recent VocalFlow updates.</description>
+    <description>Most recent SpeechX updates.</description>
     <language>en</language>
     <item>
       <title>Version ${VERSION}</title>
@@ -301,7 +301,7 @@ if [[ "${SKIP_NOTARIZE}" != "1" && "${SKIP_SPARKLE}" != "1" ]]; then
     echo ""
     echo "Sparkle update:  ${ZIP_OUT}"
     echo "Appcast:         ${APPCAST_OUT}"
-    echo "  1. Copy ${APP_NAME}-${VERSION}.zip + appcast.xml into public/releases/vocalflow/"
+    echo "  1. Copy ${APP_NAME}-${VERSION}.zip + appcast.xml into public/releases/speechx/"
     echo "     in the website repo (aeroIIT/vocallabslpnew), commit, and deploy."
     echo "     For version history, keep prior ${APP_NAME}-*.zip there and prepend this"
     echo "     run's <item> to the existing appcast (newest first)."

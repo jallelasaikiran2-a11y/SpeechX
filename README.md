@@ -1,6 +1,6 @@
-# VocalFlow — Free Voice Dictation for macOS (Free Forever, Free & Open Source)
+# SpeechX — Free Voice Dictation for macOS (Free Forever, Free & Open Source)
 
-**The free, free, free [Wispr Flow](https://wisprflow.ai) alternative for Mac — 100% free, no subscription, no trial, no paywall.** VocalFlow is a free and open-source menu bar app that lets you dictate into any text field — anywhere on your Mac — using a hold-to-record hotkey. Hold a key → speak → release → text appears at your cursor.
+**The free, free, free [Wispr Flow](https://wisprflow.ai) alternative for Mac — 100% free, no subscription, no trial, no paywall.** SpeechX is a free and open-source menu bar app that lets you dictate into any text field — anywhere on your Mac — using a hold-to-record hotkey. Hold a key → speak → release → text appears at your cursor.
 
 > Free voice typing for Mac. Free real-time speech-to-text. Free LLM-polished output. Free forever. No subscription, no credit card, no lock-in — your API keys, your data, your $0/month bill.
 
@@ -10,11 +10,11 @@
 
 ---
 
-## Why VocalFlow? (Short answer: it's free.)
+## Why SpeechX? (Short answer: it's free.)
 
-If you've been looking for a **free Wispr Flow alternative**, **free Superwhisper alternative**, **free MacWhisper alternative**, **free Aqua Voice alternative**, or simply a **free dictation app for Mac** that doesn't lock you into a subscription, VocalFlow is for you. Free to download, free to use, free to modify, free to redistribute. Did we mention it's free?
+If you've been looking for a **free Wispr Flow alternative**, **free Superwhisper alternative**, **free MacWhisper alternative**, **free Aqua Voice alternative**, or simply a **free dictation app for Mac** that doesn't lock you into a subscription, SpeechX is for you. Free to download, free to use, free to modify, free to redistribute. Did we mention it's free?
 
-| | VocalFlow | Wispr Flow | Superwhisper | MacWhisper | Aqua Voice |
+| | SpeechX | Wispr Flow | Superwhisper | MacWhisper | Aqua Voice |
 |---|---|---|---|---|---|
 | Open source | ✅ MIT | ❌ | ❌ | ❌ | ❌ |
 | Free | ✅ (BYO API key) | ❌ subscription | ❌ subscription | Freemium | ❌ subscription |
@@ -27,7 +27,7 @@ If you've been looking for a **free Wispr Flow alternative**, **free Superwhispe
 | API keys stored in Keychain (not the cloud) | ✅ | ❌ cloud | ❌ cloud | n/a | ❌ cloud |
 | Auditable source | ✅ | ❌ | ❌ | ❌ | ❌ |
 
-You bring your own Deepgram + LLM keys. Both have generous **free tiers**, so most users pay **$0/month** — making VocalFlow effectively **free voice dictation for Mac, forever**.
+You bring your own Deepgram + LLM keys. Both have generous **free tiers**, so most users pay **$0/month** — making SpeechX effectively **free voice dictation for Mac, forever**.
 
 ---
 
@@ -49,22 +49,22 @@ Audio is streamed in real-time to [Deepgram](https://deepgram.com) for transcrip
   - Code-mix transliteration (Hinglish, Tanglish, Spanglish, and 13 more)
   - Translation to any target language
 - **Focus Words dictionary** — pin the exact spelling of names / jargon (biased into Deepgram as keyterms) plus `trigger : replacement` text expansions
-- **Automatic keyword learning** — type over a dictated word to fix its spelling and VocalFlow remembers it as a Focus Word, so it's transcribed right next time ([exact trigger conditions below](#automatic-keyword-learning-type-over))
+- **Automatic keyword learning** — type over a dictated word to fix its spelling and SpeechX remembers it as a Focus Word, so it's transcribed right next time ([exact trigger conditions below](#automatic-keyword-learning-type-over))
 - **Save & Verify** — Save buttons in Settings immediately validate the key against the provider's `/models` endpoint
-- **Surfaced errors** — bad keys, rate limits, and network errors flash on the menu-bar icon and stream to `os_log` (`log stream --predicate 'subsystem == "com.vocalflow.app"' --level debug`)
+- **Surfaced errors** — bad keys, rate limits, and network errors flash on the menu-bar icon and stream to `os_log` (`log stream --predicate 'subsystem == "com.speechx.app"' --level debug`)
 - **Works in any app** — text is injected via simulated Cmd+V into Slack, Notion, VS Code, Cursor, ChatGPT, Claude, browser fields, terminals, anything
 - **Menu bar app** — no Dock icon, minimal footprint
-- **API keys stored in Keychain** — never written to disk in plaintext, never sent to a VocalFlow server (there isn't one)
+- **API keys stored in Keychain** — never written to disk in plaintext, never sent to a SpeechX server (there isn't one)
 - **Live waveform overlay** while recording so you know it's listening
 - **System-audio muting** so your speakers don't bleed into the mic during a meeting
 
 ### Automatic keyword learning (type-over)
 
-When you correct the spelling of a word VocalFlow just dictated — by **typing over it** — the corrected spelling is added to your **Focus Words** automatically, so the recognizer spells it right next time. Re-spelling the same word **updates** that entry instead of adding a duplicate.
+When you correct the spelling of a word SpeechX just dictated — by **typing over it** — the corrected spelling is added to your **Focus Words** automatically, so the recognizer spells it right next time. Re-spelling the same word **updates** that entry instead of adding a duplicate.
 
 It's deliberately conservative and only triggers when **all** of these hold:
 
-1. **You just dictated it.** The word you edit must be one VocalFlow typed in that dictation — editing your own pre-existing text is ignored.
+1. **You just dictated it.** The word you edit must be one SpeechX typed in that dictation — editing your own pre-existing text is ignored.
 2. **Soon after.** Within ~2 minutes of the dictation (the watch window for that field).
 3. **A single-word swap.** Exactly one word is replaced by exactly one other — not multiple edits, and not inserting or deleting words.
 4. **A spelling variant, not a different word.** The old and new spellings differ by a small edit distance (1 up to ~⅓ of the word's length), and the corrected word is at least 3 characters long.
@@ -73,11 +73,11 @@ It's deliberately conservative and only triggers when **all** of these hold:
 7. **A native text field.** It reads the field via macOS Accessibility, which works in TextEdit, Notes, Mail, and most native apps. Browsers, Electron apps (Slack, VS Code, Discord), and terminals often don't expose editable text, so corrections there may not be picked up.
 8. **Accessibility permission is granted** (already required for the hotkey and text injection).
 
-When it fires, the corrected word is added and any older spelling-variants of that same word are removed, leaving a single current entry. Only bare single-word entries are ever auto-removed — your `trigger : replacement` expansions are never touched. It's fully local: VocalFlow only compares against the words it injected and keeps just the correction, never the surrounding text of your documents.
+When it fires, the corrected word is added and any older spelling-variants of that same word are removed, leaving a single current entry. Only bare single-word entries are ever auto-removed — your `trigger : replacement` expansions are never touched. It's fully local: SpeechX only compares against the words it injected and keeps just the correction, never the surrounding text of your documents.
 
 ## Requirements
 
-- macOS 13 Ventura or later (Apple Silicon and Intel) — VocalFlow itself is **free**
+- macOS 13 Ventura or later (Apple Silicon and Intel) — SpeechX itself is **free**
 - [Deepgram API key](https://console.deepgram.com/signup) — **free** tier with $200 credit (months of dictation, free)
 - One LLM provider key (optional, for post-processing) — both have **free** tiers:
   - [Groq](https://console.groq.com/keys) — fast, generous **free** tier
@@ -86,12 +86,12 @@ When it fires, the corrected word is added and any older spelling-variants of th
 
 ## Installation (Pre-built)
 
-Download the latest `VocalFlow.app.zip` or `VocalFlow.pkg` from the [Releases](../../releases) page, unzip it, and move it to `/Applications`.
+Download the latest `SpeechX.app.zip` or `SpeechX.pkg` from the [Releases](../../releases) page, unzip it, and move it to `/Applications`.
 
-Because VocalFlow is not notarized by Apple, macOS will block it on first launch with a *"cannot be opened because the developer cannot be verified"* warning. Run this one-time command to clear the quarantine flag:
+Because SpeechX is not notarized by Apple, macOS will block it on first launch with a *"cannot be opened because the developer cannot be verified"* warning. Run this one-time command to clear the quarantine flag:
 
 ```bash
-xattr -dr com.apple.quarantine /Applications/VocalFlow.app
+xattr -dr com.apple.quarantine /Applications/SpeechX.app
 ```
 
 Then open it normally. You will not need to run this again.
@@ -107,7 +107,7 @@ Then open it normally. You will not need to run this again.
 ./build.sh
 
 # Launch
-open VocalFlow.app
+open SpeechX.app
 ```
 
 After launch, grant permissions when prompted:
@@ -121,18 +121,18 @@ After launch, grant permissions when prompted:
 
 ```bash
 # Run the binary directly — stdout/stderr appear in the terminal
-./VocalFlow.app/Contents/MacOS/VocalFlow
+./SpeechX.app/Contents/MacOS/SpeechX
 
 # Or build a debug binary and run via Swift
 swift run
 
-# Stream VocalFlow's structured logs (Deepgram + LLM activity, errors)
-log stream --predicate 'subsystem == "com.vocalflow.app"' --level debug
+# Stream SpeechX's structured logs (Deepgram + LLM activity, errors)
+log stream --predicate 'subsystem == "com.speechx.app"' --level debug
 ```
 
 ## Setup
 
-1. Click the VocalFlow icon in the menu bar → **Settings**
+1. Click the SpeechX icon in the menu bar → **Settings**
 2. Paste your **Deepgram API key** and click **Save & Verify** — the key is validated against `/v1/models` immediately
 3. Choose a model and language
 4. (Optional) In **LLM Post-Processing**, pick **Groq** or **OpenRouter**, paste the matching key, and click **Save & Verify**
@@ -151,7 +151,7 @@ log stream --predicate 'subsystem == "com.vocalflow.app"' --level debug
 ## Project Structure
 
 ```
-Sources/VocalFlow/
+Sources/SpeechX/
 ├── main.swift                       # Entry point
 ├── AppDelegate.swift                # App lifecycle
 ├── AppState.swift                   # Shared state, settings persistence, transient errors
@@ -178,7 +178,7 @@ Sources/VocalFlow/
 
 ## Privacy
 
-- VocalFlow has no backend. There is no VocalFlow server, no telemetry, no analytics.
+- SpeechX has no backend. There is no SpeechX server, no telemetry, no analytics.
 - Audio is streamed **directly from your Mac to Deepgram** over WSS. Transcripts are sent **directly to Groq or OpenRouter** over HTTPS.
 - API keys live in the macOS Keychain.
 - Source is MIT-licensed and auditable — verify the claims above for yourself.

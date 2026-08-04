@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_NAME="VocalFlow"
-BUNDLE_ID="com.vocalflow.app"
+APP_NAME="SpeechX"
+BUNDLE_ID="com.speechx.app"
 APP_PATH="/Applications/${APP_NAME}.app"
 
 echo "Stopping ${APP_NAME}..."

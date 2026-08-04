@@ -1,37 +1,37 @@
-# Build output
-.build/
-.build-arm64/
-.build-x86_64/
-VocalFlow.app/
-WisprClone.app/
-
-# Installer output
-dist/
-
-# Xcode / Swift
-*.xcodeproj/
-*.xcworkspace/
-DerivedData/
-*.o
-*.d
-
-# …but the iOS project IS checked in (user state stays out)
-!ios/VocalFlow.xcodeproj/
-ios/VocalFlow.xcodeproj/xcuserdata/
-!ios/VocalFlow.xcodeproj/project.xcworkspace/
-ios/VocalFlow.xcodeproj/project.xcworkspace/xcuserdata/
-
-# Editor
-.vscode/
-
 # macOS
 .DS_Store
 .AppleDouble
 .LSOverride
-__MACOSX/
 
-# Secrets / keys (never commit)
-*.pem
-*.key
-*.p12
-*.mobileprovision
+# Xcode / Swift
+build/
+DerivedData/
+*.app
+*.ipa
+*.dSYM.zip
+*.dSYM
+xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+
+# C# / .NET / Visual Studio
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.userprefs
+TestResults/
+*.log
+
+# Node
+node_modules/
+npm-debug.log
+
+# Secrets and API Keys
+*.env
+.env*
+secrets.json
+keys.plist
+*secret*
+*api_key*

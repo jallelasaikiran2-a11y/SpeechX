@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_NAME="VocalFlow"
+APP_NAME="SpeechX"
 APP_BUNDLE="${APP_NAME}.app"
-BUNDLE_ID="com.vocalflow.app"
-PKG_ID="com.vocalflow.installer"
+BUNDLE_ID="com.speechx.app"
+PKG_ID="com.speechx.installer"
 PKG_OUT="dist/${APP_NAME}.pkg"
 SCRIPTS_DIR="dist/.pkg_scripts"
 STAGING_DIR="dist/.pkg_root"
@@ -22,7 +22,7 @@ mkdir -p "${SCRIPTS_DIR}" "${STAGING_DIR}"
 cp -R "${APP_BUNDLE}" "${STAGING_DIR}/${APP_BUNDLE}"
 
 # Component plist: disable bundle relocation. Without this, macOS detects an
-# existing com.vocalflow.app anywhere on disk (common: a developer's project
+# existing com.speechx.app anywhere on disk (common: a developer's project
 # checkout) and installs the new copy in place there, completely ignoring
 # /Applications.
 cat > "${COMPONENT_PLIST}" <<COMPONENT

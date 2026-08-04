@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_NAME="VocalFlow"
+APP_NAME="SpeechX"
 APP_BUNDLE="${APP_NAME}.app"
 DMG_NAME="${APP_NAME}.dmg"
 DMG_TMP="dist/${APP_NAME}_tmp.dmg"
@@ -91,7 +91,7 @@ rm -rf "${STAGING_DIR}"
 echo ""
 echo "Done! Installer: ${DMG_OUT}"
 echo ""
-echo "Distribute ${DMG_OUT} — users open it and drag VocalFlow to Applications."
+echo "Distribute ${DMG_OUT} — users open it and drag SpeechX to Applications."
 echo ""
 echo "IMPORTANT: After first launch, users must grant Accessibility permission:"
-echo "  System Settings → Privacy & Security → Accessibility → enable VocalFlow"
+echo "  System Settings → Privacy & Security → Accessibility → enable SpeechX"

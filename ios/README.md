@@ -1,6 +1,6 @@
-# VocalFlow iOS — keyboard + background dictation
+# SpeechX iOS — keyboard + background dictation
 
-**The Xcode project is checked in: open `ios/VocalFlow.xcodeproj` and hit ▶.**
+**The Xcode project is checked in: open `ios/SpeechX.xcodeproj` and hit ▶.**
 (Sign both targets with your team on first open; free personal teams work —
 installs just expire after ~7 days.)
 
@@ -13,15 +13,15 @@ usage strings all in place, the audio session activates but audio I/O is
 refused at start by both `AVAudioEngine` ('what' / 2003329396) and the
 C-level `AudioQueue`. Same restriction Wispr Flow works around.
 
-So VocalFlow uses the **background-dictation** architecture (Wispr-parity):
+So SpeechX uses the **background-dictation** architecture (Wispr-parity):
 
 ```
-Messages: user taps 🎤 on the VocalFlow keyboard
+Messages: user taps 🎤 on the SpeechX keyboard
   ├─ hot mic (≤3 min since last dictation)?
   │    └─ keyboard sends "start" → the backgrounded app begins streaming
   │       instantly — NO app switch at all
   └─ cold start?
-       └─ keyboard opens vocalflow://dictate → app starts recording →
+       └─ keyboard opens speechx://dictate → app starts recording →
           auto-returns via the suspend selector (~0.5 s flicker)
 While recording: app streams mic → Deepgram in the BACKGROUND
   (UIBackgroundModes: audio; orange mic indicator on), heartbeating live
@@ -36,18 +36,18 @@ keyboard-side watchdog (recording state silent >6 s ⇒ "lost connection").
 
 ## Layout
 
-- `VocalFlow.xcodeproj` — checked in, shared scheme included. Xcode 16
+- `SpeechX.xcodeproj` — checked in, shared scheme included. Xcode 16
   synchronized-folders project; target membership lives in
   `PBXFileSystemSynchronizedBuildFileExceptionSet` blocks.
-- `VocalFlow/` — app target's folder: assets, `Info.plist` (URL scheme +
+- `SpeechX/` — app target's folder: assets, `Info.plist` (URL scheme +
   `UIBackgroundModes: audio`), entitlements.
-- `VocalFlowKeyboard/` — all Swift sources (the app target compiles
-  `VocalFlowApp.swift`, `MicCapture.swift`, `SharedTranscript.swift`,
+- `SpeechXKeyboard/` — all Swift sources (the app target compiles
+  `SpeechXApp.swift`, `MicCapture.swift`, `SharedTranscript.swift`,
   `AppSettings.swift` + the shared services from here via membership
   exceptions), keyboard `Info.plist` (`RequestsOpenAccess`), entitlements.
 - `DeepgramService.swift`, `APIError.swift`, `URLConstants.swift` are copies
   of the macOS app's cross-platform files — keep them in sync with
-  `Sources/VocalFlow/`.
+  `Sources/SpeechX/`.
 
 The Deepgram key is **not in code**: the app's setup screen has a
 Save & Verify field; the key lives in App Group `UserDefaults`
@@ -55,12 +55,12 @@ Save & Verify field; the key lives in App Group `UserDefaults`
 
 ## Run / test (physical iPhone; the simulator can't test the keyboard flow)
 
-1. Open `ios/VocalFlow.xcodeproj`, select the **VocalFlow** scheme + your
+1. Open `ios/SpeechX.xcodeproj`, select the **SpeechX** scheme + your
    iPhone, ▶. (Both targets: Signing & Capabilities → your team.)
 2. In the app: paste your Deepgram key → **Save & Verify**.
-3. Settings → General → Keyboard → Keyboards → Add **VocalFlow** →
+3. Settings → General → Keyboard → Keyboards → Add **SpeechX** →
    **Allow Full Access**.
-4. Any app: 🌐 → VocalFlow → **🎤** → speak (watch live words on the
+4. Any app: 🌐 → SpeechX → **🎤** → speak (watch live words on the
    keyboard) → **✓** → text inserts. Repeat taps within 3 min start
    instantly with no app switch.
 
@@ -68,7 +68,7 @@ Save & Verify field; the key lives in App Group `UserDefaults`
 
 - The mic indicator stays on during the 3-min hot window (mic is genuinely
   held open for instant restarts) — tune `keepAliveSeconds` in
-  `VocalFlowApp.swift`.
+  `SpeechXApp.swift`.
 - Private APIs used (fine for dev; revisit for App Store review): the
   `suspend` selector for auto-return (fallback: URL-scheme map) and the
   host-bundle-ID KVC read. Review will also scrutinize a Full Access

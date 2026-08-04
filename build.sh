@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_NAME="VocalFlow"
+APP_NAME="SpeechX"
 BUILD_DIR=".build/release"
 APP_BUNDLE="${APP_NAME}.app"
 CONTENTS="${APP_BUNDLE}/Contents"
@@ -31,14 +31,14 @@ fi
 
 echo "Code signing (ad-hoc)..."
 codesign --force --deep --sign - \
-    --entitlements "Resources/VocalFlow.entitlements" \
+    --entitlements "Resources/SpeechX.entitlements" \
     "${APP_BUNDLE}"
 
 echo "Stripping quarantine..."
 xattr -dr com.apple.quarantine "${APP_BUNDLE}" 2>/dev/null || true
 
 echo "Resetting Accessibility permission (re-add after launch)..."
-tccutil reset Accessibility "com.vocalflow.app" 2>/dev/null || true
+tccutil reset Accessibility "com.speechx.app" 2>/dev/null || true
 
 echo ""
 echo "Done! Built: ${APP_BUNDLE}"
@@ -48,4 +48,4 @@ echo "To install: cp -r ${APP_BUNDLE} /Applications/ && xattr -dr com.apple.quar
 echo ""
 echo "NOTE: After each rebuild you must re-grant Accessibility permission:"
 echo "  System Settings → Privacy & Security → Accessibility"
-echo "  Remove VocalFlow if present, then re-add it after launching."
+echo "  Remove SpeechX if present, then re-add it after launching."

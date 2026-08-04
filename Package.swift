@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "VocalFlow",
+    name: "SpeechX",
     platforms: [
         .macOS(.v13)
     ],
@@ -11,11 +11,11 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
-            name: "VocalFlow",
+            name: "SpeechX",
             dependencies: [
                 .product(name: "Sparkle", package: "Sparkle")
             ],
-            path: "Sources/VocalFlow",
+            path: "Sources/SpeechX",
             linkerSettings: [
                 // The app bundle is hand-assembled, so the executable must be
                 // able to find the embedded Sparkle.framework at runtime.
@@ -23,9 +23,9 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "VocalFlowTests",
-            dependencies: ["VocalFlow"],
-            path: "Tests/VocalFlowTests"
+            name: "SpeechXTests",
+            dependencies: ["SpeechX"],
+            path: "Tests/SpeechXTests"
         )
     ]
 )

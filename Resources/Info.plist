@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleExecutable</key>
-	<string>VocalFlow</string>
+	<string>SpeechX</string>
 	<key>CFBundleIconFile</key>
 	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.vocalflow.app</string>
+	<string>com.speechx.app</string>
 	<key>CFBundleName</key>
-	<string>VocalFlow</string>
+	<string>SpeechX</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -23,13 +23,13 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>VocalFlow needs Accessibility access to inject transcribed text.</string>
+	<string>SpeechX needs Accessibility access to inject transcribed text.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>VocalFlow needs microphone access to transcribe your speech.</string>
+	<string>SpeechX needs microphone access to transcribe your speech.</string>
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
 	<key>SUFeedURL</key>
-	<string>https://www.vocallabs.ai/releases/vocalflow/appcast.xml</string>
+	<string>https://www.vocallabs.ai/releases/speechx/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>sgKFJaVbCUqpJnWvIUSxGuhvrj11ndWuIlgGqNuOXf4=</string>
 	<key>SUScheduledCheckInterval</key>

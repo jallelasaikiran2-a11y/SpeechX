@@ -1,6 +1,6 @@
-# VocalFlow for Windows
+# SpeechX for Windows
 
-A native Windows port of VocalFlow — the free, open-source, bring-your-own-key voice dictation
+A native Windows port of SpeechX — the free, open-source, bring-your-own-key voice dictation
 app. Hold a hotkey, speak, release, and your words are typed into whatever text field has focus.
 
 This is a **separate C#/.NET (WPF) codebase** that mirrors the behavior of the macOS Swift app in
@@ -26,7 +26,7 @@ You bring your own API keys. Both Deepgram and the LLM providers have free tiers
 ## Build & run
 
 ```powershell
-cd windows/VocalFlow
+cd windows/SpeechX
 dotnet build
 dotnet run
 ```
@@ -37,7 +37,7 @@ right-click → **Settings…**, to configure your API keys.
 ### Publish a single self-contained .exe
 
 ```powershell
-cd windows/VocalFlow
+cd windows/SpeechX
 dotnet publish -c Release -r win-x64 --self-contained true `
   -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
 ```
@@ -54,7 +54,7 @@ installed.
 4. Hold the hotkey and start dictating.
 
 API keys are stored **encrypted with Windows DPAPI** (per-user) under
-`%APPDATA%\VocalFlow\credentials.json`; plain preferences live in `%APPDATA%\VocalFlow\settings.json`.
+`%APPDATA%\SpeechX\credentials.json`; plain preferences live in `%APPDATA%\SpeechX\settings.json`.
 
 ## Architecture — macOS → Windows mapping
 
@@ -94,7 +94,7 @@ API keys are stored **encrypted with Windows DPAPI** (per-user) under
 
 ## Type-over keyword learning: coverage & limits
 
-After VocalFlow injects dictated text, it briefly watches the focused field; if you edit a word it
+After SpeechX injects dictated text, it briefly watches the focused field; if you edit a word it
 just typed into a close spelling variant (e.g. `Jon` → `John`), the corrected spelling is auto-added
 to your **Focus Words** as a spelling lock (which biases Deepgram toward it next time). Re-spelling
 the same word updates that entry in place rather than piling up duplicates.
@@ -107,8 +107,8 @@ is resolved to the text control itself or, if the app focuses a container, its i
 - **Chromium / Electron apps** — Chrome, Edge, VS Code, Slack, Discord, Teams and other web-view UIs
   render their own text and don't expose it usably to UI Automation.
 - **Terminals** and **custom-drawn / canvas editors** — their text isn't published to UIA.
-- **Elevated (admin) windows** — a normally-run VocalFlow can't read into a process running as
-  administrator (Windows UIPI). Only run VocalFlow elevated if you specifically need this.
+- **Elevated (admin) windows** — a normally-run SpeechX can't read into a process running as
+  administrator (Windows UIPI). Only run SpeechX elevated if you specifically need this.
 - This is the same class of limitation as the macOS version, which likewise depends on the
   accessibility layer.
 
