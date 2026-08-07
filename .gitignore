@@ -35,3 +35,8 @@ secrets.json
 keys.plist
 *secret*
 *api_key*
+
+# Build Artifacts
+*.dmg
+*.pkg
+*.app.zip
