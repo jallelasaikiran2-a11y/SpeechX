@@ -33,10 +33,13 @@ class HotkeyManager {
 
         if isNowPressed && !triggerKeyIsDown {
             triggerKeyIsDown = true
-            startRecording()
+            if case .idle = appState.recordingState {
+                startRecording()
+            } else if case .recording = appState.recordingState {
+                stopRecordingAndTranscribe()
+            }
         } else if !isNowPressed && triggerKeyIsDown {
             triggerKeyIsDown = false
-            stopRecordingAndTranscribe()
         }
     }
 
@@ -78,7 +81,7 @@ class HotkeyManager {
         }
     }
 
-    private func cancelRecording() {
+    func cancelRecording() {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             // Only act while actively recording — ignore Esc during transcription
@@ -112,7 +115,7 @@ class HotkeyManager {
         }
     }
 
-    private func stopRecordingAndTranscribe() {
+    func stopRecordingAndTranscribe() {
         Task { @MainActor [weak self] in
             guard let self else { return }
             self.appState.recordingState = .transcribing

@@ -1,4 +1,4 @@
-import AppKit
+﻿import AppKit
 import SwiftUI
 import Combine
 
@@ -27,7 +27,7 @@ class RecordingOverlayController {
         panel.level = .floating
         panel.hidesOnDeactivate = false
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-        panel.ignoresMouseEvents = true
+        panel.ignoresMouseEvents = false
 
         panel.contentView = NSHostingView(rootView: WaveformOverlayView(appState: appState))
         panel.contentView?.wantsLayer = true
@@ -54,9 +54,16 @@ class RecordingOverlayController {
         let size = panel.contentView?.fittingSize ?? CGSize(width: 120, height: 52)
         panel.setContentSize(size)
 
-        let x = screenFrame.midX - size.width / 2
-        let y = screenFrame.minY + 40
-        panel.setFrameOrigin(NSPoint(x: x, y: y))
+                let mouseLoc = NSEvent.mouseLocation
+        let x = mouseLoc.x + 16
+        let y = mouseLoc.y - size.height - 16
+        
+        // Ensure it stays on screen
+        var origin = NSPoint(x: x, y: y)
+        if origin.x + size.width > screenFrame.maxX { origin.x = screenFrame.maxX - size.width - 8 }
+        if origin.y < screenFrame.minY { origin.y = screenFrame.minY + 8 }
+        
+        panel.setFrameOrigin(origin)
     }
 
     func show() {
@@ -80,3 +87,4 @@ class RecordingOverlayController {
         })
     }
 }
+

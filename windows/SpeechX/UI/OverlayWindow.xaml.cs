@@ -1,3 +1,4 @@
+﻿using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -8,15 +9,9 @@ using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace SpeechX.UI;
 
-/// <summary>
-/// Borderless, click-through, always-on-top "recording" bubble shown at the bottom-center of the
-/// primary screen while capture is active. Port of the macOS RecordingOverlayController +
-/// WaveformOverlayView.
-/// </summary>
 public partial class OverlayWindow : Window
 {
     private const int GWL_EXSTYLE = -20;
-    private const int WS_EX_TRANSPARENT = 0x20;
     private const int WS_EX_NOACTIVATE = 0x08000000;
     private const int WS_EX_TOOLWINDOW = 0x80;
 
@@ -29,7 +24,7 @@ public partial class OverlayWindow : Window
         InitializeComponent();
         _appState = appState;
         _appState.PropertyChanged += OnAppStateChanged;
-        Loaded += (_, _) => StartBarAnimations();
+        _appState.AudioEngine.VolumeChanged += OnVolumeChanged;
     }
 
     private void OnAppStateChanged(object? sender, PropertyChangedEventArgs e)
@@ -41,12 +36,33 @@ public partial class OverlayWindow : Window
         if (IsVisible) Reposition();
     }
 
+    private void OnVolumeChanged(float rms)
+    {
+        Dispatcher.InvokeAsync(() =>
+        {
+            if (!IsVisible) return;
+            
+            // Map rms (e.g. 0.0 to 0.1) to height
+            double normalized = Math.Min(1.0, rms * 10); // scale up
+            if (normalized < 0.05) normalized = 0;
+            
+            double targetHeight = MinBar + (MaxBar - MinBar) * normalized;
+            
+            Rectangle[] bars = { Bar1, Bar2, Bar3, Bar4 };
+            foreach (var bar in bars)
+            {
+                var anim = new DoubleAnimation(targetHeight, TimeSpan.FromMilliseconds(50));
+                bar.BeginAnimation(HeightProperty, anim);
+            }
+        });
+    }
+
     protected override void OnSourceInitialized(EventArgs e)
     {
         base.OnSourceInitialized(e);
         var hwnd = new WindowInteropHelper(this).Handle;
         int ex = GetWindowLong(hwnd, GWL_EXSTYLE);
-        SetWindowLong(hwnd, GWL_EXSTYLE, ex | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW);
+        SetWindowLong(hwnd, GWL_EXSTYLE, ex | WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW);
     }
 
     public void ShowOverlay()
@@ -67,36 +83,47 @@ public partial class OverlayWindow : Window
 
     private void Reposition()
     {
-        // SizeToContent updates lazily; force a measure so ActualWidth is current.
         UpdateLayout();
-        var area = SystemParameters.WorkArea;
-        Left = area.Left + (area.Width - ActualWidth) / 2;
-        Top = area.Bottom - ActualHeight - 40;
-    }
-
-    private void StartBarAnimations()
-    {
-        Rectangle[] bars = { Bar1, Bar2, Bar3, Bar4 };
-        for (int i = 0; i < bars.Length; i++)
+        if (GetCursorPos(out var pt))
         {
-            var anim = new DoubleAnimation(MinBar, MaxBar, TimeSpan.FromSeconds(0.5))
-            {
-                AutoReverse = true,
-                RepeatBehavior = RepeatBehavior.Forever,
-                BeginTime = TimeSpan.FromMilliseconds(i * 80),
-                EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut },
-            };
-            bars[i].BeginAnimation(HeightProperty, anim);
+            Left = pt.X + 16;
+            Top = pt.Y + 16;
+            var area = SystemParameters.WorkArea;
+            if (Left + ActualWidth > area.Right) Left = area.Right - ActualWidth - 8;
+            if (Top + ActualHeight > area.Bottom) Top = area.Bottom - ActualHeight - 8;
+        }
+        else
+        {
+            var area = SystemParameters.WorkArea;
+            Left = area.Left + (area.Width - ActualWidth) / 2;
+            Top = area.Bottom - ActualHeight - 40;
         }
     }
 
-    // Keep the window alive across show/hide for the app lifetime.
+    private void OnCancelClick(object sender, RoutedEventArgs e)
+    {
+        _appState.HotkeyManager?.CancelRecording();
+    }
+
+    private void OnConfirmClick(object sender, RoutedEventArgs e)
+    {
+        _ = _appState.HotkeyManager?.StopRecordingAndTranscribeAsync();
+    }
+
     protected override void OnClosing(CancelEventArgs e)
     {
         e.Cancel = true;
         HideOverlay();
     }
 
+    [StructLayout(LayoutKind.Sequential)]
+    public struct POINT
+    {
+        public int X;
+        public int Y;
+    }
+
+    [DllImport("user32.dll")] private static extern bool GetCursorPos(out POINT lpPoint);
     [DllImport("user32.dll")] private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
     [DllImport("user32.dll")] private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 }

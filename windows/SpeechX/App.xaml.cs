@@ -1,4 +1,4 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Windows;
 using SpeechX.Core;
 using SpeechX.Services;
@@ -42,6 +42,7 @@ public partial class App : Application
         _updater = new UpdaterManager(state);
         _tray = new TrayController(state, _updater);
         _hotkeyManager = new HotkeyManager(state);
+        state.HotkeyManager = _hotkeyManager;
         _hotkeyManager.StartListening();
         _updater.Start();
 
@@ -70,4 +71,5 @@ public partial class App : Application
         base.OnExit(e);
     }
 }
+
 

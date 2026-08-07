@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Windows;
 using System.Windows.Controls;
 using SpeechX.Core;
@@ -20,42 +20,42 @@ namespace SpeechX.UI
             if (hour >= 5 && hour < 12)
             {
                 options.AddRange(new[] {
-                    $"Morning, {name}. Ready when you are.",
-                    "Good morning — let's turn your thoughts into words.",
-                    "Morning. Let's get to it."
+                    $"Morning, {name}.",
+                    "Good morning ï¿½ let's turn your thoughts into words.",
+                    "Morning. Let's get your thoughts down."
                 });
             }
             else if (hour >= 12 && hour < 17)
             {
                 options.AddRange(new[] {
-                    $"Back again, {name}? Let's keep talking.",
-                    "Afternoon — say what's on your mind.",
-                    "Good afternoon. Ready to dictate?"
+                    $"Good afternoon, {name}.",
+                    "Afternoon ï¿½ say what's on your mind.",
+                    "Good afternoon. Listening when you are."
                 });
             }
             else if (hour >= 17 && hour < 22)
             {
                 options.AddRange(new[] {
-                    $"Evening, {name}. Still have things to say?",
-                    "Good evening. Let's get your words down.",
-                    "Evening. Keep the ideas flowing."
+                    $"Good evening, {name}.",
+                    "Evening. Ready to capture.",
+                    "Good evening. Let's get your thoughts down."
                 });
             }
             else
             {
                 options.AddRange(new[] {
-                    "Up late? Your voice is faster than your fingers right now.",
-                    $"Late night, {name}? Speak your mind.",
-                    "Still working? Let's talk it out."
+                    "Late night, {name}.",
+                    $"Ready to capture.",
+                    "Listening when you are."
                 });
             }
             
             options.AddRange(new[] {
-                $"Hey {name}, speak your mind.",
-                $"{name}, let's get your words down.",
-                $"Talk it out, {name}.",
-                "Ready to dictate?",
-                "Your voice is your best tool."
+                $"Hello, {name}.",
+                $"Ready to dictate.",
+                $"Let's get your thoughts down.",
+                "Listening when you are.",
+                "Ready to capture."
             });
             
             return options[new Random().Next(options.Count)];
@@ -109,5 +109,6 @@ namespace SpeechX.UI
         }
     }
 }
+
 
 

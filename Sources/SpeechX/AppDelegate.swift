@@ -1,4 +1,4 @@
-import AppKit
+﻿import AppKit
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     private var menuBarController: MenuBarController?
@@ -20,6 +20,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.menuBarController = menuBar
         self.permissionsManager = PermissionsManager()
         self.hotkeyManager = HotkeyManager(appState: state)
+        state.hotkeyManager = self.hotkeyManager
 
         let startListening: () -> Void = { [weak self] in
             guard let self else { return }
@@ -43,3 +44,4 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 }
+

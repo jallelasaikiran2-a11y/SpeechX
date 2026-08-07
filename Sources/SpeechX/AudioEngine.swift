@@ -1,4 +1,4 @@
-import AVFoundation
+﻿import AVFoundation
 import CoreAudio
 
 struct AudioInputDevice: Identifiable, Hashable {
@@ -16,7 +16,10 @@ enum AudioEngineError: Error, LocalizedError {
     }
 }
 
+import Combine
+
 class AudioEngine {
+    let volumePublisher = PassthroughSubject<Float, Never>()
     private var engine: AVAudioEngine?
     private var isCapturing = false
 
@@ -137,7 +140,16 @@ class AudioEngine {
             return buffer
         }
 
-        if conversionError == nil && outputBuffer.frameLength > 0 {
+                if conversionError == nil && outputBuffer.frameLength > 0 {
+            if let channelData = outputBuffer.floatChannelData?[0] {
+                let length = Int(outputBuffer.frameLength)
+                var sumSq: Float = 0
+                for i in 0..<length {
+                    sumSq += channelData[i] * channelData[i]
+                }
+                let rms = length > 0 ? sqrt(sumSq / Float(length)) : 0
+                volumePublisher.send(rms)
+            }
             callback(outputBuffer, targetFormat)
         }
     }
@@ -150,3 +162,4 @@ class AudioEngine {
         engine = nil
     }
 }
+

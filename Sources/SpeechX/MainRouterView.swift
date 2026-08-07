@@ -1,4 +1,4 @@
-import SwiftUI
+ï»¿import SwiftUI
 
 enum AppRoute {
     case home
@@ -33,36 +33,36 @@ struct HomeView: View {
         switch hour {
         case 5..<12:
             options = [
-                "Morning, \(name). Ready when you are.",
-                "Good morning — let's turn your thoughts into words.",
-                "Morning. Let's get to it."
+                "Morning, \(name).",
+                "Good morning ï¿½ let's turn your thoughts into words.",
+                "Morning. Let's get your thoughts down."
             ]
         case 12..<17:
             options = [
-                "Back again, \(name)? Let's keep talking.",
-                "Afternoon — say what's on your mind.",
-                "Good afternoon. Ready to dictate?"
+                "Good afternoon, \(name).",
+                "Afternoon ï¿½ say what's on your mind.",
+                "Good afternoon. Listening when you are."
             ]
         case 17..<22:
             options = [
-                "Evening, \(name). Still have things to say?",
-                "Good evening. Let's get your words down.",
-                "Evening. Keep the ideas flowing."
+                "Good evening, \(name).",
+                "Evening. Ready to capture.",
+                "Good evening. Let's get your thoughts down."
             ]
         default:
             options = [
-                "Up late? Your voice is faster than your fingers right now.",
-                "Late night, \(name)? Speak your mind.",
-                "Still working? Let's talk it out."
+                "Late night, \(name).",
+                "Ready to capture.",
+                "Listening when you are."
             ]
         }
         
         let neutralOptions = [
-            "Hey \(name), speak your mind.",
-            "\(name), let's get your words down.",
-            "Talk it out, \(name).",
-            "Ready to dictate?",
-            "Your voice is your best tool."
+            "Hello, \(name).",
+            "Ready to dictate.",
+            "Let's get your thoughts down.",
+            "Listening when you are.",
+            "Ready to capture."
         ]
         
         options.append(contentsOf: neutralOptions)
@@ -245,4 +245,5 @@ struct SettingsPanelView: View {
         }
     }
 }
+
 

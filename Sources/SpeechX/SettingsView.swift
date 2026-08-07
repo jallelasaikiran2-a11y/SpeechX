@@ -1,4 +1,4 @@
-import SwiftUI
+﻿import SwiftUI
 import AppKit
 
 // NSTextField wrapper that forces left alignment and supports secure mode.
@@ -665,7 +665,7 @@ struct SettingsView: View {
                 }
                 .labelsHidden()
             }
-            Text("Hold the selected key to record, release to transcribe.").vlCaption()
+            Text("Press to start recording, press again to stop and transcribe. Press Esc or click X to cancel.").vlCaption()
 
             VLField(label: "Feedback sound") {
                 Picker("", selection: $appState.feedbackSoundName) {
@@ -1002,3 +1002,4 @@ private struct PermissionRowView: View {
         }
     }
 }
+

@@ -1,4 +1,4 @@
-using NAudio.CoreAudioApi;
+﻿using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using SpeechX.Core;
 
@@ -18,6 +18,7 @@ public sealed class AudioEngine
     private LinearResampler? _resampler;
     private volatile bool _isCapturing;
     private Action<byte[]>? _callback;
+    public event Action<float>? VolumeChanged;
 
     /// <summary>Lists active audio capture endpoints. The returned Id is the WASAPI endpoint id.</summary>
     public static IReadOnlyList<AudioInputDevice> AvailableInputDevices()
@@ -85,6 +86,12 @@ public sealed class AudioEngine
 
         var mono = ToMonoFloat(e.Buffer, e.BytesRecorded, _capture.WaveFormat);
         if (mono.Length == 0) return;
+
+        // Calculate RMS volume
+        float sumSq = 0;
+        for (int i = 0; i < mono.Length; i++) sumSq += mono[i] * mono[i];
+        float rms = (mono.Length > 0) ? (float)Math.Sqrt(sumSq / mono.Length) : 0;
+        VolumeChanged?.Invoke(rms);
 
         var pcm = _resampler.Process(mono);
         if (pcm.Length > 0) _callback(pcm);
@@ -195,3 +202,4 @@ public sealed class AudioEngine
         }
     }
 }
+

@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using SpeechX.Services;
@@ -44,6 +44,7 @@ public sealed class AppState : INotifyPropertyChanged
     /// corrected spelling into the focus-words dictionary.</summary>
     public TypeOverWatcher TypeOverWatcher { get; } = new();
     public SystemAudioMuter AudioMuter { get; } = new();
+    public SpeechX.Services.HotkeyManager? HotkeyManager { get; set; }
     public SettingsStore Settings { get; } = new();
     public CredentialStore Credentials { get; } = new();
 
@@ -418,5 +419,6 @@ public sealed class AppState : INotifyPropertyChanged
         else disp.BeginInvoke(action);
     }
 }
+
 
 

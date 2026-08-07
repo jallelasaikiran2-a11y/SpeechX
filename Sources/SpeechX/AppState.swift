@@ -1,4 +1,4 @@
-import Foundation
+﻿import Foundation
 import Combine
 import AppKit
 
@@ -385,3 +385,4 @@ class AppState: ObservableObject {
         }
     }
 }
+

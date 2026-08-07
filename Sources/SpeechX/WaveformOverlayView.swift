@@ -1,53 +1,70 @@
-import SwiftUI
+﻿import SwiftUI
 
 struct WaveformOverlayView: View {
     @ObservedObject var appState: AppState
 
-    @State private var bar1 = false
-    @State private var bar2 = false
-    @State private var bar3 = false
-    @State private var bar4 = false
+    @State private var currentVolume: Float = 0.0
 
     private let minH: CGFloat = 6
     private let maxH: CGFloat = 28
 
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
+            // Cancel Button
+            Button(action: {
+                appState.hotkeyManager?.cancelRecording()
+            }) {
+                Image(systemName: "xmark")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(.white)
+            }
+            .buttonStyle(PlainButtonStyle())
+            .padding(.trailing, 4)
+            
             HStack(spacing: 5) {
-                bar(animated: bar1)
-                bar(animated: bar2)
-                bar(animated: bar3)
-                bar(animated: bar4)
+                bar(index: 0)
+                bar(index: 1)
+                bar(index: 2)
+                bar(index: 3)
             }
             if !appState.liveTranscript.isEmpty {
                 Text(appState.liveTranscript)
                     .font(.system(size: 13, weight: .regular))
-                    .foregroundColor(Color(hex: 0x141414))
+                    .foregroundColor(.white)
                     .lineLimit(1)
                     .truncationMode(.head)
                     .frame(maxWidth: 360, alignment: .leading)
             }
+            
+            // Confirm Button
+            Button(action: {
+                appState.hotkeyManager?.stopRecordingAndTranscribe()
+            }) {
+                Image(systemName: "checkmark")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(.white)
+            }
+            .buttonStyle(PlainButtonStyle())
+            .padding(.leading, 4)
         }
-        .padding(.horizontal, 18)
-        .padding(.vertical, 10)
-        .background(Capsule().fill(Color(hex: 0xEFEDE8).opacity(0.92)))
-        .overlay(Capsule().stroke(Color(hex: 0x141414).opacity(0.25), lineWidth: 1))
-        .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.00) { bar1 = true }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.08) { bar2 = true }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.16) { bar3 = true }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.24) { bar4 = true }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(Capsule().fill(Color(hex: 0x202020).opacity(0.92)))
+        .overlay(Capsule().stroke(Color.white.opacity(0.25), lineWidth: 1))
+        .onReceive(appState.audioEngine.volumePublisher) { volume in
+            withAnimation(.linear(duration: 0.05)) {
+                self.currentVolume = volume
+            }
         }
     }
 
     @ViewBuilder
-    private func bar(animated: Bool) -> some View {
+    private func bar(index: Int) -> some View {
+        let normalized = min(1.0, currentVolume * 10.0)
+        let targetHeight = normalized < 0.05 ? minH : minH + CGFloat(normalized) * (maxH - minH)
+        
         RoundedRectangle(cornerRadius: 2)
-            .fill(Color(hex: 0x1B7A4D))
-            .frame(width: 4, height: animated ? maxH : minH)
-            .animation(
-                .easeInOut(duration: 0.5).repeatForever(autoreverses: true),
-                value: animated
-            )
+            .fill(Color.white)
+            .frame(width: 4, height: targetHeight)
     }
 }

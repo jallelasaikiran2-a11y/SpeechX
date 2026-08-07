@@ -7,8 +7,8 @@ using SpeechX.Core;
 namespace SpeechX.Services;
 
 /// <summary>
-/// Global push-to-talk via a low-level keyboard hook (WH_KEYBOARD_LL). Hold the configured
-/// trigger key to record, release to transcribe; Esc anywhere aborts an in-progress recording.
+/// Global toggle via a low-level keyboard hook (WH_KEYBOARD_LL). Press the configured
+/// trigger key to start recording, press again to stop and transcribe; Esc anywhere aborts an in-progress recording.
 /// Drives the full pipeline (connect → capture → close → LLM → inject), mirroring the macOS
 /// HotkeyManager. The hook callback runs on the WPF UI thread; heavy work is dispatched async
 /// so the callback returns immediately and never stalls system input.
@@ -61,12 +61,18 @@ public sealed class HotkeyManager : IDisposable
                 if (isDown && !_triggerKeyIsDown)
                 {
                     _triggerKeyIsDown = true;
-                    Ui.BeginInvoke(StartRecording);
+                    if (_appState.RecordingState == RecordingState.Idle)
+                    {
+                        Ui.BeginInvoke(StartRecording);
+                    }
+                    else if (_appState.RecordingState == RecordingState.Recording)
+                    {
+                        Ui.BeginInvoke(() => _ = StopRecordingAndTranscribeAsync());
+                    }
                 }
                 else if (isUp && _triggerKeyIsDown)
                 {
                     _triggerKeyIsDown = false;
-                    Ui.BeginInvoke(() => _ = StopRecordingAndTranscribeAsync());
                 }
             }
             else if (isDown && vk == VK_ESCAPE)
@@ -105,7 +111,7 @@ public sealed class HotkeyManager : IDisposable
         DelayThen(150, () => _appState.AudioMuter.Mute());
     }
 
-    private void CancelRecording()
+    public void CancelRecording()
     {
         // Only act while actively recording — ignore Esc during transcription/idle.
         if (_appState.RecordingState.Kind != RecordingStateKind.Recording) return;
@@ -131,7 +137,7 @@ public sealed class HotkeyManager : IDisposable
         });
     }
 
-    private async Task StopRecordingAndTranscribeAsync()
+    public async Task StopRecordingAndTranscribeAsync()
     {
         _appState.RecordingState = RecordingState.Transcribing;
         _appState.AudioEngine.StopCapture();
